@@ -1,0 +1,5 @@
+name: AdminTools
+main: org.ipvp.admintools.AdminTools
+author: SainttX
+version: ${project.version}
+description: ${project.description}

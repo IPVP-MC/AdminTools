@@ -1,0 +1,13 @@
+# Configure database credentials and connection pool.
+database:
+  # JDBC URL (MySQL recommended)
+  url: jdbc:mysql://127.0.0.1:3306/admintools
+
+  # Database username
+  username: root
+
+  # Database password
+  password:
+
+  # Connections in the pool.
+  threads: 1
