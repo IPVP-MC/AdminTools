@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS player_login (
   time       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS player_ip_punish (
+CREATE TABLE IF NOT EXISTS player_ip_ban (
   id            INT                   AUTO_INCREMENT,
   ip_address    INT UNSIGNED,
   sender_id     CHAR(36),
@@ -19,12 +19,12 @@ CREATE TABLE IF NOT EXISTS player_ip_punish (
   FOREIGN KEY (sender_id) REFERENCES player_login (id)
 );
 
-CREATE TABLE IF NOT EXISTS player_ip_punish_reverse (
-  punish_id     INT,
+CREATE TABLE IF NOT EXISTS player_ip_unban (
+  ban_id     INT,
   ip_address    INT UNSIGNED,
   sender_id     CHAR(36),
   creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (punish_id) REFERENCES player_ip_punish (id),
+  FOREIGN KEY (ban_id) REFERENCES player_ip_ban (id),
   FOREIGN KEY (ip_address) REFERENCES player_login (ip_address),
   FOREIGN KEY (sender_id) REFERENCES player_login (id)
 );
@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS player_punish (
   reason        VARCHAR(100) NOT NULL,
   creation_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
   expiry_date   TIMESTAMP,
+  type          ENUM ('ban', 'mute'),
   PRIMARY KEY (id),
   FOREIGN KEY (banned_id) REFERENCES player_login (id),
   FOREIGN KEY (sender_id) REFERENCES player_login (id)
