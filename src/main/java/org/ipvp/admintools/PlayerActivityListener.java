@@ -5,6 +5,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 import org.ipvp.admintools.model.Ban;
+import org.ipvp.admintools.model.IpBan;
 
 import java.sql.Connection;
 import java.util.UUID;
@@ -27,7 +28,12 @@ public class PlayerActivityListener implements Listener {
                 event.setCancelled(true);
                 event.setCancelReason("You are currently banned from the network!"); // TODO: Ban information
             } else {
-                // TODO: Check IP ban
+                String ip = event.getConnection().getAddress().getAddress().getHostAddress();
+                IpBan ipBan = plugin.getActiveIpBan(connection, ip);
+                if (ipBan != null) {
+                    event.setCancelled(true);
+                    event.setCancelReason("You are currently banned from the network!");
+                }
             }
         } catch (Exception e) {
             event.setCancelled(true);
