@@ -86,7 +86,7 @@ public class PlayerActivityListener implements Listener {
         String[] split = fullCommand.split(" ");
         for (int i = split.length ; i >= 0 ; i--) {
             String command = Arrays.stream(split, 0, i).collect(Collectors.joining(" "));
-            if (plugin.getConfig().getStringList("mute-commands").contains(command)) {
+            if (plugin.getConfig().getStringList("mute-commands").contains(command.toLowerCase())) {
                 return true;
             }
         }
