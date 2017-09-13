@@ -59,12 +59,11 @@ CREATE TABLE IF NOT EXISTS player_punish (
 );
 
 CREATE TABLE IF NOT EXISTS player_punish_reverse (
-  punish_id     INT,
-  banned_id     CHAR(36),
-  sender_id     CHAR(36),
+  punish_id     INT          NOT NULL,
+  banned_id     CHAR(36)     NOT NULL,
+  sender_id     CHAR(36)     NOT NULL,
   reason        VARCHAR(100) NOT NULL,
-  creation_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  expiry_date   TIMESTAMP,
+  creation_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
   FOREIGN KEY (punish_id) REFERENCES player_punish (id),
   FOREIGN KEY (banned_id) REFERENCES player_login (id),
   FOREIGN KEY (sender_id) REFERENCES player_login (id)

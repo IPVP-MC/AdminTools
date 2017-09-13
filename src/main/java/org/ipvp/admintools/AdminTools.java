@@ -3,6 +3,8 @@ package org.ipvp.admintools;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.ibatis.common.jdbc.ScriptRunner;
 import com.zaxxer.hikari.HikariDataSource;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
@@ -107,6 +109,10 @@ public class AdminTools extends Plugin implements Listener {
                 .load(getResourceAsStream("config.yml"));
         ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, file);
         return config;
+    }
+
+    public UUID getUniqueId(CommandSender sender) {
+        return sender instanceof ProxiedPlayer ? ((ProxiedPlayer) sender).getUniqueId() : null;
     }
 
     public Ban getActiveBan(UUID banned) throws SQLException {

@@ -3,17 +3,19 @@ package org.ipvp.admintools.model;
 import java.sql.Timestamp;
 import java.util.UUID;
 
-public class Punishment {
+public class Punishment<T> {
 
     private final int id;
     private final UUID sender;
+    private final T punished;
     private final String reason;
     private final Timestamp created;
     private final Timestamp expiry;
 
-    public Punishment(int id, UUID sender, String reason, Timestamp created, Timestamp expiry) {
+    public Punishment(int id, UUID sender, T punished, String reason, Timestamp created, Timestamp expiry) {
         this.id = id;
         this.sender = sender;
+        this.punished = punished;
         this.reason = reason;
         this.created = created;
         this.expiry = expiry;
@@ -37,5 +39,9 @@ public class Punishment {
 
     public Timestamp getExpiry() {
         return expiry;
+    }
+
+    public T getPunished() {
+        return punished;
     }
 }
