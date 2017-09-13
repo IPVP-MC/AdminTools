@@ -61,6 +61,9 @@ public class AdminTools extends Plugin implements Listener {
         getProxy().getPluginManager().registerCommand(this, new UnbanCommand(this));
         getProxy().getPluginManager().registerCommand(this, new UnbanIpCommand(this));
         getProxy().getPluginManager().registerCommand(this, new UnmuteCommand(this));
+
+        // Register listeners
+        getProxy().getPluginManager().registerListener(this, new PlayerActivityListener(this));
     }
 
     // Creates the Hikari database connection
