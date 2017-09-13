@@ -11,3 +11,6 @@ database:
 
   # Connections in the pool.
   threads: 1
+
+# List of commands that are unable for use when a player is muted
+mute-commands: []
