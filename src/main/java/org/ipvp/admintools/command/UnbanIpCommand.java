@@ -3,10 +3,10 @@ package org.ipvp.admintools.command;
 import net.md_5.bungee.api.CommandSender;
 import org.ipvp.admintools.AdminTools;
 
-public class IpBanCommand extends AdminToolsCommand {
+public class UnbanIpCommand extends AdminToolsCommand {
 
-    public IpBanCommand(AdminTools plugin, String name) {
-        super(plugin, name, "admintools.command.ipban");
+    public UnbanIpCommand(AdminTools plugin, String name) {
+        super(plugin, name, "admintools.command.unbanip");
     }
 
     @Override

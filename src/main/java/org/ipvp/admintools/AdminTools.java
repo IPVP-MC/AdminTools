@@ -8,6 +8,9 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import org.ipvp.admintools.model.Ban;
+import org.ipvp.admintools.model.IpBan;
+import org.ipvp.admintools.model.Mute;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -15,14 +18,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class AdminTools extends Plugin implements Listener {
 
     private HikariDataSource hikariDataSource;
     private Configuration config;
-    
+
     @Override
     public void onEnable() {
         try {
@@ -101,5 +107,73 @@ public class AdminTools extends Plugin implements Listener {
                 .load(getResourceAsStream("config.yml"));
         ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, file);
         return config;
+    }
+
+    public Ban getActiveBan(UUID banned) throws SQLException {
+        return getActiveBan(hikariDataSource.getConnection(), banned);
+    }
+
+    public Ban getActiveBan(Connection connection, UUID banned) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement("SELECT * " +
+                "FROM player__active_punishment " +
+                "WHERE banned_id = ? " +
+                "AND type = 'ban'")) {
+            ps.setString(1, banned.toString());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ?
+                        new Ban(rs.getInt("id"),
+                                UUID.fromString(rs.getString("sender_id")),
+                                banned,
+                                rs.getString("reason"),
+                                rs.getTimestamp("creation_date"),
+                                rs.getTimestamp("expiry_date"))
+                        : null;
+            }
+        }
+    }
+
+    public Mute getActiveMute(UUID banned) throws SQLException {
+        return getActiveMute(hikariDataSource.getConnection(), banned);
+    }
+
+    public Mute getActiveMute(Connection connection, UUID banned) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement("SELECT * " +
+                "FROM player_active_punishment " +
+                "WHERE banned_id = ? " +
+                "AND type = 'mute'")) {
+            ps.setString(1, banned.toString());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ?
+                        new Mute(rs.getInt("id"),
+                                UUID.fromString(rs.getString("sender_id")),
+                                banned,
+                                rs.getString("reason"),
+                                rs.getTimestamp("creation_date"),
+                                rs.getTimestamp("expiry_date"))
+                        : null;
+            }
+        }
+    }
+
+    public IpBan getActiveIpBan(String hostAddress) throws SQLException {
+        return getActiveIpBan(hikariDataSource.getConnection(), hostAddress);
+    }
+
+    public IpBan getActiveIpBan(Connection connection, String hostAddress) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement("SELECT * " +
+                "FROM player_active_ip_ban " +
+                "WHERE ip_address = ?")) {
+            ps.setString(1, hostAddress);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ?
+                        new IpBan(rs.getInt("id"),
+                                UUID.fromString(rs.getString("sender_id")),
+                                rs.getString("ip_address"),
+                                rs.getString("reason"),
+                                rs.getTimestamp("creation_date"),
+                                rs.getTimestamp("expiry_date"))
+                        : null;
+            }
+        }
     }
 }

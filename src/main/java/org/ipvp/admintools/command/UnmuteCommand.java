@@ -6,7 +6,7 @@ import org.ipvp.admintools.AdminTools;
 public class UnmuteCommand extends AdminToolsCommand {
 
     public UnmuteCommand(AdminTools plugin, String name) {
-        super(plugin, name);
+        super(plugin, name, "admintools.command.unmute");
     }
 
     @Override

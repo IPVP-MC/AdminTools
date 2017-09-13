@@ -6,7 +6,7 @@ import org.ipvp.admintools.AdminTools;
 public class UnbanCommand extends AdminToolsCommand {
 
     public UnbanCommand(AdminTools plugin, String name) {
-        super(plugin, name);
+        super(plugin, name, "admintools.command.unban");
     }
 
     @Override

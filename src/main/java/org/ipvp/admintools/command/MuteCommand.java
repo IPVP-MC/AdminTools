@@ -6,7 +6,7 @@ import org.ipvp.admintools.AdminTools;
 public class MuteCommand extends AdminToolsCommand {
 
     public MuteCommand(AdminTools plugin, String name) {
-        super(plugin, name);
+        super(plugin, name, "admintools.command.mute");
     }
 
     @Override
