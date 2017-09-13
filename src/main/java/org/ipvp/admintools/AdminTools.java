@@ -10,6 +10,12 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+import org.ipvp.admintools.command.BanCommand;
+import org.ipvp.admintools.command.IpBanCommand;
+import org.ipvp.admintools.command.MuteCommand;
+import org.ipvp.admintools.command.UnbanCommand;
+import org.ipvp.admintools.command.UnbanIpCommand;
+import org.ipvp.admintools.command.UnmuteCommand;
 import org.ipvp.admintools.model.Ban;
 import org.ipvp.admintools.model.IpBan;
 import org.ipvp.admintools.model.Mute;
@@ -47,6 +53,14 @@ public class AdminTools extends Plugin implements Listener {
             getLogger().log(Level.SEVERE, "Failed to create a connection to database", e);
             return;
         }
+
+        // Register commands
+        getProxy().getPluginManager().registerCommand(this, new BanCommand(this));
+        getProxy().getPluginManager().registerCommand(this, new IpBanCommand(this));
+        getProxy().getPluginManager().registerCommand(this, new MuteCommand(this));
+        getProxy().getPluginManager().registerCommand(this, new UnbanCommand(this));
+        getProxy().getPluginManager().registerCommand(this, new UnbanIpCommand(this));
+        getProxy().getPluginManager().registerCommand(this, new UnmuteCommand(this));
     }
 
     // Creates the Hikari database connection

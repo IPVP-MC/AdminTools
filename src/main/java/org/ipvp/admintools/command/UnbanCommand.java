@@ -13,8 +13,8 @@ import java.util.logging.Level;
 
 public class UnbanCommand extends AdminToolsCommand {
 
-    public UnbanCommand(AdminTools plugin, String name) {
-        super(plugin, name, "admintools.command.unban");
+    public UnbanCommand(AdminTools plugin) {
+        super(plugin, "unban", "admintools.command.unban");
     }
 
     @Override

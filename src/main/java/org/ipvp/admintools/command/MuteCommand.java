@@ -17,8 +17,8 @@ import java.util.logging.Level;
 
 public class MuteCommand extends AdminToolsCommand {
 
-    public MuteCommand(AdminTools plugin, String name) {
-        super(plugin, name, "admintools.command.mute");
+    public MuteCommand(AdminTools plugin) {
+        super(plugin, "mute", "admintools.command.mute");
     }
 
     @Override

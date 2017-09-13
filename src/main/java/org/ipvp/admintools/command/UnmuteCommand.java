@@ -14,8 +14,8 @@ import java.util.logging.Level;
 
 public class UnmuteCommand extends AdminToolsCommand {
 
-    public UnmuteCommand(AdminTools plugin, String name) {
-        super(plugin, name, "admintools.command.unmute");
+    public UnmuteCommand(AdminTools plugin) {
+        super(plugin, "unmute", "admintools.command.unmute");
     }
 
     @Override

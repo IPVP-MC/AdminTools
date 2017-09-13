@@ -5,8 +5,8 @@ import org.ipvp.admintools.AdminTools;
 
 public class IpBanCommand extends AdminToolsCommand {
 
-    public IpBanCommand(AdminTools plugin, String name) {
-        super(plugin, name, "admintools.command.ipban");
+    public IpBanCommand(AdminTools plugin) {
+        super(plugin, "ipban", "admintools.command.ipban");
     }
 
     @Override

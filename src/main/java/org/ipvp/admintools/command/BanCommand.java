@@ -16,8 +16,8 @@ import java.util.logging.Level;
 
 public class BanCommand extends AdminToolsCommand {
 
-    public BanCommand(AdminTools plugin, String name) {
-        super(plugin, name, "admintools.command.ban");
+    public BanCommand(AdminTools plugin) {
+        super(plugin, "ban", "admintools.command.ban");
     }
 
     @Override

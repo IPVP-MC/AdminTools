@@ -5,8 +5,8 @@ import org.ipvp.admintools.AdminTools;
 
 public class UnbanIpCommand extends AdminToolsCommand {
 
-    public UnbanIpCommand(AdminTools plugin, String name) {
-        super(plugin, name, "admintools.command.unbanip");
+    public UnbanIpCommand(AdminTools plugin) {
+        super(plugin, "unbanip", "admintools.command.unbanip");
     }
 
     @Override
