@@ -42,9 +42,10 @@ public abstract class AdminToolsCommand extends Command {
         try {
             return UUID.fromString(arg);
         } catch (IllegalArgumentException e) {
+            // TODO: Check online player
             try (PreparedStatement ps = connection.prepareStatement("SELECT id " +
                     "FROM player_login " +
-                    "WHERE name = ?")) {
+                    "WHERE name = ?")) { // TODO: Ordering
                 ps.setString(1, arg);
                 try (ResultSet rs = ps.executeQuery()) {
                     return rs.next() ? UUID.fromString(rs.getString("id")) : null;

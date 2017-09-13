@@ -22,6 +22,12 @@ public class BanCommand extends AdminToolsCommand {
 
     @Override
     public void onCommand(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            // TODO: Better usage messages
+            sender.sendMessage(ChatColor.RED + "Usage: /ban <player> [duration] <reason>");
+            return;
+        }
+
         // ban <player> [duration] <reason>
         try (Connection connection = getPlugin().getDatabase().getConnection()) {
             UUID id = getUuidFromArg(connection, 0, args);
@@ -38,8 +44,15 @@ public class BanCommand extends AdminToolsCommand {
                     long expiryDate;
                     long duration = TimeFormatUtil.parseIntoMilliseconds(args[1]);
                     if (duration == -1) {
+                        if (!sender.hasPermission("admintools.command.ban.permanent")) {
+                            sender.sendMessage(ChatColor.RED + "Please specify a valid duration");
+                            return;
+                        }
                         expiryDate = Long.MAX_VALUE;
                         reason = getReasonFromArgs(1, args);
+                    } else if (args.length < 3) {
+                        sender.sendMessage(ChatColor.RED + "Usage: /ban <player> [duration] <reason>");
+                        return;
                     } else {
                         expiryDate = System.currentTimeMillis() + duration;
                         reason = getReasonFromArgs(2, args);

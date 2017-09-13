@@ -20,7 +20,12 @@ public class UnmuteCommand extends AdminToolsCommand {
 
     @Override
     public void onCommand(CommandSender sender, String[] args) {
-// ban <player> [duration] <reason>
+        if (args.length < 1) {
+            // TODO: Better usage messages
+            sender.sendMessage(ChatColor.RED + "Usage: /unmute <player> [reason]");
+            return;
+        }
+
         try (Connection connection = getPlugin().getDatabase().getConnection()) {
             UUID id = getUuidFromArg(connection, 0, args);
 
@@ -34,8 +39,10 @@ public class UnmuteCommand extends AdminToolsCommand {
                 } else {
                     String reason = args.length > 1 ? getReasonFromArgs(1, args) : null;
 
-                    if (reason == null) { // Check sender perms
-
+                    if (reason == null && !sender.hasPermission("admintools.command.unmute.no-reason")) { // Check sender perms
+                        sender.sendMessage(ChatColor.RED + "Please specify a valid unmute reason");
+                        sender.sendMessage(ChatColor.RED + "Usage: /unmute <player> [reason]");
+                        return;
                     }
 
                     try (PreparedStatement insertUnban = connection.prepareStatement("INSERT INTO player_punish_reverse" +

@@ -19,6 +19,12 @@ public class UnbanCommand extends AdminToolsCommand {
 
     @Override
     public void onCommand(CommandSender sender, String[] args) {
+        if (args.length < 1) {
+            // TODO: Better usage messages
+            sender.sendMessage(ChatColor.RED + "Usage: /unban <player> [reason]");
+            return;
+        }
+
         // ban <player> [duration] <reason>
         try (Connection connection = getPlugin().getDatabase().getConnection()) {
             UUID id = getUuidFromArg(connection, 0, args);
@@ -33,8 +39,10 @@ public class UnbanCommand extends AdminToolsCommand {
                 } else {
                     String reason = args.length > 1 ? getReasonFromArgs(1, args) : null;
 
-                    if (reason == null) { // Check sender perms
-
+                    if (reason == null && !sender.hasPermission("admintools.command.unban.no-reason")) { // Check sender perms
+                        sender.sendMessage(ChatColor.RED + "Please specify a valid unban reason");
+                        sender.sendMessage(ChatColor.RED + "Usage: /unban <player> [reason]");
+                        return;
                     }
 
                     try (PreparedStatement insertUnban = connection.prepareStatement("INSERT INTO player_punish_reverse" +
