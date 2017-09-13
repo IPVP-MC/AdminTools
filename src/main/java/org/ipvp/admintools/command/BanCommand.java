@@ -62,7 +62,7 @@ public class BanCommand extends AdminToolsCommand {
                                  connection.prepareStatement("INSERT INTO player_punish(banned_id, sender_id, reason, expiry_date, type) " +
                                          "VALUES (?, ?, ?, ?, ?)")) {
                         insertBan.setString(1, id.toString());
-                        insertBan.setString(2, sender instanceof ProxiedPlayer ? ((ProxiedPlayer) sender).getUniqueId().toString() : null);
+                        insertBan.setString(2, getPlugin().getUniqueId(sender).toString());
                         insertBan.setString(3, reason);
                         insertBan.setTimestamp(4, new Timestamp(expiryDate));
                         insertBan.setString(5, "ban");

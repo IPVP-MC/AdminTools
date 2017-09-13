@@ -29,7 +29,6 @@ public class MuteCommand extends AdminToolsCommand {
             return;
         }
 
-        // mute <player> [duration] <reason>
         try (Connection connection = getPlugin().getDatabase().getConnection()) {
             UUID id = getUuidFromArg(connection, 0, args);
 
