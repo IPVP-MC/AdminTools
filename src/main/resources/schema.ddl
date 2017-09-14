@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS player_punish_reverse (
   punish_id     INT          NOT NULL,
   banned_id     CHAR(36)     NOT NULL,
   sender_id     CHAR(36)     NOT NULL,
-  reason        VARCHAR(100) NOT NULL,
+  reason        VARCHAR(100),
   creation_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (punish_id) REFERENCES player_punish (id)
     ON DELETE CASCADE
