@@ -143,7 +143,7 @@ public class AdminTools extends Plugin implements Listener {
 
     public Ban getActiveBan(Connection connection, UUID banned) throws SQLException {
         try (PreparedStatement ps = connection.prepareStatement("SELECT * " +
-                "FROM player__active_punishment " +
+                "FROM player_active_punishment " +
                 "WHERE banned_id = ? " +
                 "AND type = 'ban'")) {
             ps.setString(1, banned.toString());
