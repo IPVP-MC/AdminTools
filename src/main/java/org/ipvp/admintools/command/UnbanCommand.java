@@ -50,8 +50,8 @@ public class UnbanCommand extends AdminToolsCommand {
                             "VALUES (?, ?, ?, ?)")) {
                         insertUnban.setInt(1, ban.getId());
                         insertUnban.setString(2, ban.getPunished().toString());
-                        insertUnban.setString(2, getPlugin().getUniqueId(sender).toString());
-                        insertUnban.setString(3, reason);
+                        insertUnban.setString(3, getPlugin().getUniqueId(sender).toString());
+                        insertUnban.setString(4, reason);
                         insertUnban.executeUpdate();
                     }
 
@@ -59,8 +59,8 @@ public class UnbanCommand extends AdminToolsCommand {
                 }
             }
         } catch (SQLException e) {
-            sender.sendMessage(ChatColor.RED + "An error occurred when issuing the ban");
-            getPlugin().getLogger().log(Level.SEVERE, "Failed to issue ban", e);
+            sender.sendMessage(ChatColor.RED + "An error occurred when issuing the unban");
+            getPlugin().getLogger().log(Level.SEVERE, "Failed to issue unban", e);
         }
     }
 }

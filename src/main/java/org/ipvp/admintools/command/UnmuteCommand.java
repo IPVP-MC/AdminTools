@@ -52,8 +52,8 @@ public class UnmuteCommand extends AdminToolsCommand {
                             "VALUES (?, ?, ?, ?)")) {
                         insertUnban.setInt(1, mute.getId());
                         insertUnban.setString(2, mute.getPunished().toString());
-                        insertUnban.setString(2, getPlugin().getUniqueId(sender).toString());
-                        insertUnban.setString(3, reason);
+                        insertUnban.setString(3, getPlugin().getUniqueId(sender).toString());
+                        insertUnban.setString(4, reason);
                         insertUnban.executeUpdate();
                     }
 
@@ -63,8 +63,8 @@ public class UnmuteCommand extends AdminToolsCommand {
                 }
             }
         } catch (SQLException e) {
-            sender.sendMessage(ChatColor.RED + "An error occurred when issuing the ban");
-            getPlugin().getLogger().log(Level.SEVERE, "Failed to issue ban", e);
+            sender.sendMessage(ChatColor.RED + "An error occurred when issuing the unmute");
+            getPlugin().getLogger().log(Level.SEVERE, "Failed to issue unmute", e);
         }
     }
 }
