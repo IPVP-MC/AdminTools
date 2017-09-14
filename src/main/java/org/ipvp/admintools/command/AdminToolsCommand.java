@@ -1,6 +1,7 @@
 package org.ipvp.admintools.command;
 
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import org.ipvp.admintools.AdminTools;
 
@@ -42,10 +43,15 @@ public abstract class AdminToolsCommand extends Command {
         try {
             return UUID.fromString(arg);
         } catch (IllegalArgumentException e) {
-            // TODO: Check online player
+            ProxiedPlayer online = getPlugin().getProxy().getPlayer(arg);
+            if (online != null) {
+                return online.getUniqueId();
+            }
             try (PreparedStatement ps = connection.prepareStatement("SELECT id " +
                     "FROM player_login " +
-                    "WHERE name = ?")) { // TODO: Ordering
+                    "WHERE name = ? " +
+                    "ORDER BY time DESC " +
+                    "LIMIT 1")) {
                 ps.setString(1, arg);
                 try (ResultSet rs = ps.executeQuery()) {
                     return rs.next() ? UUID.fromString(rs.getString("id")) : null;
