@@ -1,6 +1,7 @@
 package org.ipvp.admintools;
 
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.LoginEvent;
@@ -12,6 +13,7 @@ import org.ipvp.admintools.model.IpBan;
 import org.ipvp.admintools.model.Mute;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.UUID;
@@ -46,6 +48,28 @@ public class PlayerActivityListener implements Listener {
         } catch (Exception e) {
             event.setCancelled(true);
             event.setCancelReason("An error occurred when checking user ban information");
+        } finally {
+            event.completeIntent(plugin);
+        }
+    }
+
+    @EventHandler
+    public void onLogin(LoginEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
+        event.registerIntent(plugin);
+        try (Connection connection = plugin.getDatabase().getConnection();
+             PreparedStatement insertLogin = connection.prepareStatement("INSERT INTO player_login(id, name, ip_address) " +
+                     "VALUES (?, ?, INET_ATON(?))")) {
+            PendingConnection pendingConnection = event.getConnection();
+            insertLogin.setString(1, pendingConnection.getUniqueId().toString());
+            insertLogin.setString(2, pendingConnection.getName());
+            insertLogin.setString(3, pendingConnection.getAddress().getAddress().getHostAddress());
+            insertLogin.executeUpdate();
+        } catch (SQLException e) {
+            plugin.getLogger().log(Level.SEVERE, "Failed to log player login", e);
         } finally {
             event.completeIntent(plugin);
         }
