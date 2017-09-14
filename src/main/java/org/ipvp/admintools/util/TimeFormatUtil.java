@@ -1,5 +1,6 @@
 package org.ipvp.admintools.util;
 
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -10,8 +11,9 @@ import static java.util.concurrent.TimeUnit.*;
 public class TimeFormatUtil {
 
     // The possible formattable units
-    private final static TimeUnit[] formattableUnit =
-            new TimeUnit[] { TimeUnit.DAYS, TimeUnit.HOURS, TimeUnit.MINUTES, TimeUnit.SECONDS };
+    private final static ChronoUnit[] formattableUnit =
+            new ChronoUnit[]{ChronoUnit.YEARS, ChronoUnit.MONTHS, ChronoUnit.WEEKS, ChronoUnit.DAYS,
+                    ChronoUnit.HOURS, ChronoUnit.MINUTES, ChronoUnit.SECONDS};
 
 
     private static class DateFormatter {
@@ -22,11 +24,11 @@ public class TimeFormatUtil {
          * @param units The number of units of time
          * @return A string formatted
          */
-        public String format(TimeUnit timeUnit, long units) {
+        public String format(ChronoUnit timeUnit, long units) {
             return String.format("%d %s", units, nameOf(timeUnit, units == 1));
         }
 
-        private String nameOf(TimeUnit unit, boolean singular) {
+        private String nameOf(ChronoUnit unit, boolean singular) {
             String name = unit.name().toLowerCase();
             return singular ? name.substring(0, name.length() - 1) : name;
         }
@@ -34,8 +36,10 @@ public class TimeFormatUtil {
 
     private static class ShortenedDateFormatter extends DateFormatter {
         @Override
-        public String format(TimeUnit timeUnit, long units) {
-            char prefix = Character.toLowerCase(timeUnit.name().charAt(0));
+        public String format(ChronoUnit timeUnit, long units) {
+            String prefix = timeUnit != ChronoUnit.MONTHS
+                    ? Character.toString(Character.toLowerCase(timeUnit.name().charAt(0)))
+                    : "mo";
             return String.format("%d%s", units, prefix);
         }
     }
@@ -59,6 +63,8 @@ public class TimeFormatUtil {
      */
     public static long parseIntoMilliseconds(String duration) {
         String suffixes = "dhms";
+        TimeUnit[] formattableUnit =
+                new TimeUnit[] { TimeUnit.DAYS, TimeUnit.HOURS, TimeUnit.MINUTES, TimeUnit.SECONDS };
         List<Object> tokens = Collections.list(new StringTokenizer(duration, suffixes, true));
         int time = 0;
 
@@ -157,8 +163,8 @@ public class TimeFormatUtil {
         }
 
         StringBuilder output = new StringBuilder();
-        for (TimeUnit unit : formattableUnit) {
-            long minimumTime = unit.toMillis(1L);
+        for (ChronoUnit unit : formattableUnit) {
+            long minimumTime = unit.getDuration().toMillis();
             if (minimumTime > timeLeft) {
                 continue;
             }
@@ -172,7 +178,7 @@ public class TimeFormatUtil {
 
         String result = output.toString();
         if (result.isEmpty()) {
-            return formatter.format(TimeUnit.SECONDS, 0);
+            return formatter.format(ChronoUnit.SECONDS, 0);
         }
 
         return result.trim(); // Remove excess white space
