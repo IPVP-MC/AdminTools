@@ -59,26 +59,26 @@ public class TimeFormatUtil {
      */
     public static long parseIntoMilliseconds(String duration) {
         String suffixes = "dhms";
-        StringTokenizer tokenizer = new StringTokenizer(duration, suffixes, true);
-        List<Object> tokens = Collections.list(tokenizer);
+        List<Object> tokens = Collections.list(new StringTokenizer(duration, suffixes, true));
+        int time = 0;
 
-        System.out.print(tokens);
         if (tokens.size() <= 1) {
             return -1L;
         }
 
-        try {
-            long milliseconds = 0;
-            for (int i = 1; i < formattableUnit.length; i += 2) {
-                String token = (String) tokens.get(i);
-                int suffixIndex = suffixes.indexOf(token.charAt(0));
+        for (int i = 1; i < tokens.size(); i += 2) {
+            String token = (String) tokens.get(i);
+            int suffixIndex = suffixes.indexOf(token.charAt(0));
+
+            try {
                 int value = Integer.parseInt((String) tokens.get(i - 1));
-                milliseconds += MILLISECONDS.convert(value, formattableUnit[suffixIndex]);
+                time += MILLISECONDS.convert(value, formattableUnit[suffixIndex]);
+            } catch (NumberFormatException e) {
+                return -1L;
             }
-            return milliseconds;
-        } catch (NumberFormatException e) {
-            return -1L;
         }
+
+        return time;
     }
 
     /**
@@ -112,7 +112,7 @@ public class TimeFormatUtil {
      * @return A formatted timestamp
      */
     public static String toDetailedDate(long futureDate, boolean shortened) {
-        return toDetailedDate(System.currentTimeMillis(), futureDate + 1, shortened);
+        return toDetailedDate(System.currentTimeMillis(), futureDate + 50, shortened);
     }
 
     /**
