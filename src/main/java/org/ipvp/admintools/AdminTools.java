@@ -29,13 +29,13 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 public class AdminTools extends Plugin implements Listener {
 
-    public static final long YEAR_BAN_TIME = TimeUnit.DAYS.toMillis(365);
+    public static final long YEAR_BAN_TIME = ChronoUnit.YEARS.getDuration().toMillis();
 
     private HikariDataSource hikariDataSource;
     private Configuration config;
