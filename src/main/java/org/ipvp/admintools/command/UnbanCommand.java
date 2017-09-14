@@ -55,8 +55,7 @@ public class UnbanCommand extends AdminToolsCommand {
                         insertUnban.executeUpdate();
                     }
 
-                    // TODO: broadcasts, etc
-                    sender.sendMessage(ChatColor.GREEN + "You have unbanned " + args[0]);
+                    getPlugin().broadcast(ChatColor.RED + String.format("%s was unbanned by %s", args[0], sender.getName()), "admintools.notify.unban");
                 }
             }
         } catch (SQLException e) {

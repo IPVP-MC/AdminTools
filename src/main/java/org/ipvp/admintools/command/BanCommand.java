@@ -69,8 +69,16 @@ public class BanCommand extends AdminToolsCommand {
                         insertBan.executeUpdate();
                     }
 
-                    // TODO: broadcasts, etc
-                    sender.sendMessage(ChatColor.GREEN + "You have banned " + args[0]);
+                    ProxiedPlayer target = getPlugin().getProxy().getPlayer(id);
+                    String timeFormatted = TimeFormatUtil.toDetailedDate(expiryDate, true);
+                    if (target != null) {
+                        target.disconnect(String.format("You were banned by %s for %s [%s]", sender.getName(), reason, timeFormatted));
+                    }
+                    String name = target == null ? args[0] : target.getName();
+                    // Broadcast minimal for all players
+                    getPlugin().broadcast(ChatColor.RED + String.format("%s was banned by %s", name, sender.getName()), "admintools.notify.ban.minimal");
+                    // Broadcast full message
+                    getPlugin().broadcast(ChatColor.RED + String.format("%s was banned by %s for %s [%s]", name, sender.getName(), reason, timeFormatted), "admintools.notify.ban.full");
                 }
             }
         } catch (SQLException e) {

@@ -2,9 +2,11 @@ package org.ipvp.admintools.command;
 
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.ipvp.admintools.AdminTools;
 import org.ipvp.admintools.model.Ban;
 import org.ipvp.admintools.model.Mute;
+import org.ipvp.admintools.util.TimeFormatUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -55,8 +57,9 @@ public class UnmuteCommand extends AdminToolsCommand {
                         insertUnban.executeUpdate();
                     }
 
-                    // TODO: broadcasts, etc
-                    sender.sendMessage(ChatColor.GREEN + "You have unmuted " + args[0]);
+                    ProxiedPlayer target = getPlugin().getProxy().getPlayer(id);
+                    String name = target == null ? args[0] : target.getName();
+                    getPlugin().broadcast(ChatColor.RED + String.format("%s was unmuted by %s", name, sender.getName()), "admintools.notify.unmute");
                 }
             }
         } catch (SQLException e) {

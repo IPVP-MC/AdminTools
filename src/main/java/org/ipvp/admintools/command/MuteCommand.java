@@ -69,13 +69,21 @@ public class MuteCommand extends AdminToolsCommand {
                         insertBan.executeUpdate();
                     }
 
-                    // TODO: broadcasts, etc
-                    sender.sendMessage(ChatColor.GREEN + "You have muted " + args[0]);
+                    ProxiedPlayer target = getPlugin().getProxy().getPlayer(id);
+                    String timeFormatted = TimeFormatUtil.toDetailedDate(expiryDate, true);
+                    if (target != null) {
+                        target.disconnect(String.format("You were muted by %s for %s [%s]", sender.getName(), reason, timeFormatted));
+                    }
+                    String name = target == null ? args[0] : target.getName();
+                    // Broadcast minimal for all players
+                    getPlugin().broadcast(ChatColor.RED + String.format("%s was muted by %s", name, sender.getName()), "admintools.notify.mute.minimal");
+                    // Broadcast full message
+                    getPlugin().broadcast(ChatColor.RED + String.format("%s was muted by %s for %s [%s]", name, sender.getName(), reason, timeFormatted), "admintools.notify.mute.full");
                 }
             }
         } catch (SQLException e) {
-            sender.sendMessage(ChatColor.RED + "An error occurred when issuing the ban");
-            getPlugin().getLogger().log(Level.SEVERE, "Failed to issue ban", e);
+            sender.sendMessage(ChatColor.RED + "An error occurred when issuing the mute");
+            getPlugin().getLogger().log(Level.SEVERE, "Failed to issue mute", e);
         }
     }
 }

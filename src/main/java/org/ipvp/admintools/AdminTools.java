@@ -97,6 +97,11 @@ public class AdminTools extends Plugin implements Listener {
         getLogger().info("Database successfully upgraded");
     }
 
+    public void broadcast(String message, String permission) {
+        getProxy().getPlayers().stream().filter(p -> p.hasPermission(permission))
+                .forEach(p -> p.sendMessage(message));
+    }
+
     public Configuration getConfig() {
         return config;
     }
