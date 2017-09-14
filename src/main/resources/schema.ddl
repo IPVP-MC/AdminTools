@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS player_login (
 
 CREATE OR REPLACE VIEW player_related_ip_login AS
   SELECT DISTINCT
-    l1.id,
-    l2.id,
+    l1.id id1,
+    l2.id id2,
     l1.time
   FROM player_login l1
     JOIN player_login l2
@@ -24,9 +24,7 @@ CREATE TABLE IF NOT EXISTS player_ip_ban (
   reason        VARCHAR(100) NOT NULL,
   creation_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
   expiry_date   TIMESTAMP,
-  PRIMARY KEY (id),
-  FOREIGN KEY (ip_address) REFERENCES player_login (ip_address),
-  FOREIGN KEY (sender_id) REFERENCES player_login (id)
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS player_ip_unban (
@@ -34,9 +32,8 @@ CREATE TABLE IF NOT EXISTS player_ip_unban (
   ip_address    INT UNSIGNED,
   sender_id     CHAR(36),
   creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (ban_id) REFERENCES player_ip_ban (id),
-  FOREIGN KEY (ip_address) REFERENCES player_login (ip_address),
-  FOREIGN KEY (sender_id) REFERENCES player_login (id)
+  FOREIGN KEY (ban_id) REFERENCES player_ip_ban (id)
+    ON DELETE CASCADE
 );
 
 CREATE OR REPLACE VIEW player_active_ip_ban AS
@@ -63,9 +60,7 @@ CREATE TABLE IF NOT EXISTS player_punish (
   creation_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
   expiry_date   TIMESTAMP,
   type          ENUM ('ban', 'mute'),
-  PRIMARY KEY (id),
-  FOREIGN KEY (banned_id) REFERENCES player_login (id),
-  FOREIGN KEY (sender_id) REFERENCES player_login (id)
+  PRIMARY KEY (id)
 );
 
 CREATE TABLE IF NOT EXISTS player_punish_reverse (
@@ -74,9 +69,8 @@ CREATE TABLE IF NOT EXISTS player_punish_reverse (
   sender_id     CHAR(36)     NOT NULL,
   reason        VARCHAR(100) NOT NULL,
   creation_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (punish_id) REFERENCES player_punish (id),
-  FOREIGN KEY (banned_id) REFERENCES player_login (id),
-  FOREIGN KEY (sender_id) REFERENCES player_login (id)
+  FOREIGN KEY (punish_id) REFERENCES player_punish (id)
+    ON DELETE CASCADE
 );
 
 CREATE OR REPLACE VIEW player_active_punishment AS
