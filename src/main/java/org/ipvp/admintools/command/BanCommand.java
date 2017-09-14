@@ -31,6 +31,12 @@ public class BanCommand extends PunishCommand {
 
     @Override
     public void issueNewPunishment(CommandSender sender, Connection connection, String targetName, UUID id, long expiry, String reason) {
+        if (reason.toLowerCase().startsWith("blacklist")
+            && sender != getPlugin().getProxy().getConsole()) {
+            sender.sendMessage(ChatColor.RED + "Blacklist bans may only be issued from the console");
+            return;
+        }
+
         try (PreparedStatement insertBan =
                      connection.prepareStatement("INSERT INTO player_punish(banned_id, sender_id, reason, expiry_date, type) " +
                              "VALUES (?, ?, ?, ?, 'ban')")) {
