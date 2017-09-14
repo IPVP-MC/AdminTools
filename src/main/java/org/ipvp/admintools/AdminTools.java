@@ -103,6 +103,7 @@ public class AdminTools extends Plugin implements Listener {
     public void broadcast(String message, String permission) {
         getProxy().getPlayers().stream().filter(p -> p.hasPermission(permission))
                 .forEach(p -> p.sendMessage(message));
+        getProxy().getConsole().sendMessage(message);
     }
 
     public Configuration getConfig() {
