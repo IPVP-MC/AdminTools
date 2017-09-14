@@ -138,7 +138,9 @@ public class AdminTools extends Plugin implements Listener {
     }
 
     public Ban getActiveBan(UUID banned) throws SQLException {
-        return getActiveBan(hikariDataSource.getConnection(), banned);
+        try (Connection connection = hikariDataSource.getConnection()) {
+            return getActiveBan(connection, banned);
+        }
     }
 
     public Ban getActiveBan(Connection connection, UUID banned) throws SQLException {
@@ -161,7 +163,9 @@ public class AdminTools extends Plugin implements Listener {
     }
 
     public Mute getActiveMute(UUID banned) throws SQLException {
-        return getActiveMute(hikariDataSource.getConnection(), banned);
+        try (Connection connection = hikariDataSource.getConnection()) {
+            return getActiveMute(connection, banned);
+        }
     }
 
     public Mute getActiveMute(Connection connection, UUID banned) throws SQLException {
@@ -184,7 +188,9 @@ public class AdminTools extends Plugin implements Listener {
     }
 
     public IpBan getActiveIpBan(String hostAddress) throws SQLException {
-        return getActiveIpBan(hikariDataSource.getConnection(), hostAddress);
+        try (Connection connection = hikariDataSource.getConnection()) {
+            return getActiveIpBan(connection, hostAddress);
+        }
     }
 
     public IpBan getActiveIpBan(Connection connection, String hostAddress) throws SQLException {
