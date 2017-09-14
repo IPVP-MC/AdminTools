@@ -48,7 +48,7 @@ public class MuteCommand extends AdminToolsCommand {
                             sender.sendMessage(ChatColor.RED + "Please specify a valid duration");
                             return;
                         }
-                        expiryDate = Long.MAX_VALUE;
+                        expiryDate = System.currentTimeMillis() + AdminTools.YEAR_BAN_TIME;
                         reason = getReasonFromArgs(1, args);
                     } else if (args.length < 3) {
                         sender.sendMessage(ChatColor.RED + "Usage: /mute <player> [duration] <reason>");

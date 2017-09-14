@@ -62,9 +62,14 @@ public class TimeFormatUtil {
         StringTokenizer tokenizer = new StringTokenizer(duration, suffixes, true);
         List<Object> tokens = Collections.list(tokenizer);
 
+        System.out.print(tokens);
+        if (tokens.size() <= 1) {
+            return -1L;
+        }
+
         try {
             long milliseconds = 0;
-            for (int i = 0; i < formattableUnit.length; i++) {
+            for (int i = 1; i < formattableUnit.length; i += 2) {
                 String token = (String) tokens.get(i);
                 int suffixIndex = suffixes.indexOf(token.charAt(0));
                 int value = Integer.parseInt((String) tokens.get(i - 1));

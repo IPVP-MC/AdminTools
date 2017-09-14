@@ -85,7 +85,8 @@ public class PlayerActivityListener implements Listener {
         ProxiedPlayer player = (ProxiedPlayer) event.getSender();
         Mute mute;
         try {
-            mute = plugin.getActiveMute(player.getUniqueId()); // TODO: Is blocking code allowed here?
+            // TODO: Can't run blocking code
+            mute = plugin.getActiveMute(player.getUniqueId());
         } catch (SQLException e) {
             plugin.getLogger().log(Level.SEVERE, "Failed to check mute information of " + player.getName(), e);
             return;

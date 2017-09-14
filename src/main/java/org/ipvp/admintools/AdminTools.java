@@ -30,9 +30,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 public class AdminTools extends Plugin implements Listener {
+
+    public static final long YEAR_BAN_TIME = TimeUnit.DAYS.toMillis(365);
 
     private HikariDataSource hikariDataSource;
     private Configuration config;
