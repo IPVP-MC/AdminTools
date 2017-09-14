@@ -9,9 +9,12 @@ CREATE TABLE IF NOT EXISTS player_login (
 
 CREATE OR REPLACE VIEW player_related_ip_login AS
   SELECT DISTINCT
-    l1.id id1,
-    l2.id id2,
-    l1.time
+    l1.id   id1,
+    l2.id   id2,
+    l1.name name1,
+    l2.name name2,
+    l1.time time1,
+    l2.time time2
   FROM player_login l1
     JOIN player_login l2
       ON l1.ip_address = l2.ip_address
@@ -64,11 +67,11 @@ CREATE TABLE IF NOT EXISTS player_punish (
 );
 
 CREATE TABLE IF NOT EXISTS player_punish_reverse (
-  punish_id     INT          NOT NULL,
-  banned_id     CHAR(36)     NOT NULL,
-  sender_id     CHAR(36)     NOT NULL,
+  punish_id     INT       NOT NULL,
+  banned_id     CHAR(36)  NOT NULL,
+  sender_id     CHAR(36)  NOT NULL,
   reason        VARCHAR(100),
-  creation_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  creation_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (punish_id) REFERENCES player_punish (id)
     ON DELETE CASCADE
 );
