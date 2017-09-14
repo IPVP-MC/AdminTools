@@ -7,6 +7,16 @@ CREATE TABLE IF NOT EXISTS player_login (
   time       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE OR REPLACE VIEW player_related_ip_login AS
+  SELECT DISTINCT
+    l1.id,
+    l2.id,
+    l1.time
+  FROM player_login l1
+    JOIN player_login l2
+      ON l1.ip_address = l2.ip_address
+         AND l1.id <> l2.id;
+
 CREATE TABLE IF NOT EXISTS player_ip_ban (
   id            INT                   AUTO_INCREMENT,
   ip_address    INT UNSIGNED,
