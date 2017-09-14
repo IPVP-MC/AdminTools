@@ -48,6 +48,7 @@ public class PlayerActivityListener implements Listener {
         } catch (Exception e) {
             event.setCancelled(true);
             event.setCancelReason("An error occurred when checking user ban information");
+            plugin.getLogger().log(Level.SEVERE, "Failed to check user ban inforamtion", e);
         } finally {
             event.completeIntent(plugin);
         }
