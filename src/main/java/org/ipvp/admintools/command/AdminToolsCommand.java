@@ -39,7 +39,10 @@ public abstract class AdminToolsCommand extends Command {
     }
 
     protected UUID getUuidFromArg(Connection connection, int index, String[] args) throws SQLException {
-        String arg = args[index];
+        return getUuidFromArg(connection, args[index]);
+    }
+
+    protected UUID getUuidFromArg(Connection connection, String arg) throws SQLException {
         try {
             return UUID.fromString(arg);
         } catch (IllegalArgumentException e) {
@@ -56,6 +59,23 @@ public abstract class AdminToolsCommand extends Command {
                 try (ResultSet rs = ps.executeQuery()) {
                     return rs.next() ? UUID.fromString(rs.getString("id")) : null;
                 }
+            }
+        }
+    }
+
+    protected String getNameFromUuid(Connection connection, UUID uuid) throws SQLException {
+        ProxiedPlayer online = getPlugin().getProxy().getPlayer(uuid);
+        if (online != null) {
+            return online.getName();
+        }
+        try (PreparedStatement ps = connection.prepareStatement("SELECT name " +
+                "FROM player_login " +
+                "WHERE id = ? " +
+                "ORDER BY time DESC " +
+                "LIMIT 1")) {
+            ps.setString(1, uuid.toString());
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getString("name") : null;
             }
         }
     }

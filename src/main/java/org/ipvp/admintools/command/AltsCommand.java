@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class AltsCommand extends AdminToolsCommand {
@@ -74,6 +75,7 @@ public class AltsCommand extends AdminToolsCommand {
             }
         } catch (SQLException e) {
             sender.sendMessage(ChatColor.RED + "An error occurred when checking alts of " + args[0]);
+            getPlugin().getLogger().log(Level.SEVERE, "Failed to check alts", e);
         }
     }
 

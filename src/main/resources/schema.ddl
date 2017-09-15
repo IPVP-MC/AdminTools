@@ -7,6 +7,12 @@ CREATE TABLE IF NOT EXISTS player_login (
   time       TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE OR REPLACE VIEW player_latest_login AS
+  SELECT *
+  FROM player_login
+  ORDER BY time DESC
+  LIMIT 1;
+
 CREATE OR REPLACE VIEW player_related_ip_login AS
   SELECT DISTINCT
     l1.id   id1,

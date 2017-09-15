@@ -55,6 +55,7 @@ public class AdminTools extends Plugin implements Listener {
         // Register commands
         getProxy().getPluginManager().registerCommand(this, new AltsCommand(this));
         getProxy().getPluginManager().registerCommand(this, new BanCommand(this));
+        getProxy().getPluginManager().registerCommand(this, new InfoCommand(this));
         getProxy().getPluginManager().registerCommand(this, new IpBanCommand(this));
         getProxy().getPluginManager().registerCommand(this, new MuteCommand(this));
         getProxy().getPluginManager().registerCommand(this, new UnbanCommand(this));
