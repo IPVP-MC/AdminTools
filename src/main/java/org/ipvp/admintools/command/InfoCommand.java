@@ -109,13 +109,13 @@ public class InfoCommand extends AdminToolsCommand {
                             builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create()));
 
                             if (type.equalsIgnoreCase("mute")) {
-                                builder.append("[Mute] ").color(ChatColor.GOLD);
+                                builder.append("[Mute]").color(ChatColor.GOLD).append(" ");
                             } else {
-                                builder.append("[Ban]  ").color(ChatColor.RED);
+                                builder.append("[Ban]").color(ChatColor.RED).append("  ");
                             }
 
                             long duration = expiry.getTime() - created.getTime();
-                            builder.append(dateFormat.format(created)).color(ChatColor.GREEN)
+                            builder.strikethrough(false).append(dateFormat.format(created)).color(ChatColor.GREEN)
                                     .append(" ").append(name).color(ChatColor.GRAY)
                                     .append(" (").color(ChatColor.RED)
                                     .append(TimeFormatUtil.toDetailedDate(0, duration, true))
