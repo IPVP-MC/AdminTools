@@ -16,7 +16,7 @@ import java.util.logging.Level;
 
 public class InfoCommand extends AdminToolsCommand {
 
-    private static final int ENTRIES_PER_PAGE = 25;
+    private static final int ENTRIES_PER_PAGE = 10;
     private final DateFormat dateFormat = new SimpleDateFormat("MM/dd/yy");
 
     public InfoCommand(AdminTools plugin) {
@@ -77,7 +77,8 @@ public class InfoCommand extends AdminToolsCommand {
                     pageEntries.setInt(3, (page * ENTRIES_PER_PAGE) + ENTRIES_PER_PAGE);
 
                     try (ResultSet rs = pageEntries.executeQuery()) {
-                        sender.sendMessage(ChatColor.YELLOW + "Punishments of " + args[0] + "...");
+                        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',
+                                String.format("&ePunishments of %s &7(Page %d/%d)", args[0], page + 1, maxPages)));
                         while (rs.next()) {
                             String raw = rs.getString("name");
                             String name = raw == null ? "Console" : raw;
