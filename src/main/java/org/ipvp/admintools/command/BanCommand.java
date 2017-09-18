@@ -3,6 +3,7 @@ package org.ipvp.admintools.command;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Plugin;
 import org.ipvp.admintools.AdminTools;
 import org.ipvp.admintools.model.Punishment;
 import org.ipvp.admintools.util.TimeFormatUtil;
@@ -37,11 +38,15 @@ public class BanCommand extends PunishCommand {
             return;
         }
 
+        banPlayer(getPlugin(), sender, connection, targetName, id, expiry, reason);
+    }
+
+    public static void banPlayer(AdminTools plugin, CommandSender sender, Connection connection, String targetName, UUID id, long expiry, String reason) {
         try (PreparedStatement insertBan =
                      connection.prepareStatement("INSERT INTO player_punish(banned_id, sender_id, reason, creation_date, expiry_date, type) " +
                              "VALUES (?, ?, ?, ?, ?, 'ban')")) {
             insertBan.setString(1, id.toString());
-            insertBan.setString(2, getPlugin().getUniqueId(sender).toString());
+            insertBan.setString(2, plugin.getUniqueId(sender).toString());
             insertBan.setString(3, reason);
             insertBan.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
             insertBan.setTimestamp(5, new Timestamp(expiry));
@@ -50,15 +55,15 @@ public class BanCommand extends PunishCommand {
             throw new RuntimeException(e);
         }
 
-        ProxiedPlayer target = getPlugin().getProxy().getPlayer(id);
+        ProxiedPlayer target = plugin.getProxy().getPlayer(id);
         String timeFormatted = TimeFormatUtil.toDetailedDate(expiry, true);
         if (target != null) {
             target.disconnect(String.format("You were banned by %s for %s [%s]", sender.getName(), reason, timeFormatted));
         }
         String name = target == null ? targetName : target.getName();
         // Broadcast minimal for all players
-        getPlugin().broadcast(ChatColor.RED + String.format("%s was banned by %s", name, sender.getName()), "admintools.notify.ban.minimal");
+        plugin.broadcast(ChatColor.RED + String.format("%s was banned by %s", name, sender.getName()), "admintools.notify.ban.minimal");
         // Broadcast full message
-        getPlugin().broadcast(ChatColor.RED + String.format("%s was banned by %s for %s [%s]", name, sender.getName(), reason, timeFormatted), "admintools.notify.ban.full");
+        plugin.broadcast(ChatColor.RED + String.format("%s was banned by %s for %s [%s]", name, sender.getName(), reason, timeFormatted), "admintools.notify.ban.full");
     }
 }

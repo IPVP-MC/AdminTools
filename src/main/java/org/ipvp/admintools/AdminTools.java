@@ -28,7 +28,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.util.logging.Level;
 
-public class AdminTools extends Plugin implements Listener {
+public class AdminTools extends Plugin {
 
     public static final long PERMANENT_BAN_TIME = ChronoUnit.YEARS.getDuration().toMillis();
 
@@ -65,6 +65,7 @@ public class AdminTools extends Plugin implements Listener {
 
         // Register listeners
         getProxy().getPluginManager().registerListener(this, new PlayerActivityListener(this));
+        getProxy().getPluginManager().registerListener(this, new ServerMessageListener(this));
     }
 
     // Creates the Hikari database connection
