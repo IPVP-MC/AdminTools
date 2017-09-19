@@ -54,10 +54,8 @@ public class AdminTools extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new AltsCommand(this));
         getProxy().getPluginManager().registerCommand(this, new BanCommand(this));
         getProxy().getPluginManager().registerCommand(this, new InfoCommand(this));
-        getProxy().getPluginManager().registerCommand(this, new IpBanCommand(this));
         getProxy().getPluginManager().registerCommand(this, new MuteCommand(this));
         getProxy().getPluginManager().registerCommand(this, new UnbanCommand(this));
-        getProxy().getPluginManager().registerCommand(this, new UnbanIpCommand(this));
         getProxy().getPluginManager().registerCommand(this, new UnblacklistCommand(this));
         getProxy().getPluginManager().registerCommand(this, new UnmuteCommand(this));
         getProxy().getPluginManager().registerCommand(this, new WarnCommand(this));
