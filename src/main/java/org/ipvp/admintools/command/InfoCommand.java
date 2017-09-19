@@ -113,7 +113,7 @@ public class InfoCommand extends AdminToolsCommand {
                             } else if (type.equalsIgnoreCase("mute")) {
                                 builder.append("[Mute]").color(ChatColor.GOLD).append(" ").color(ChatColor.BOLD);
                             } else {
-                                builder.append("[Ban]").color(ChatColor.RED).append(" ").append(" ").color(ChatColor.BOLD);
+                                builder.append("[Ban]").color(ChatColor.RED).append("  ").color(ChatColor.BOLD);
                             }
 
                             long duration = expiry == null ? -1 : expiry.getTime() - created.getTime();

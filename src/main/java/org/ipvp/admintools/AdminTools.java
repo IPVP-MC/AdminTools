@@ -30,8 +30,6 @@ import java.util.logging.Level;
 
 public class AdminTools extends Plugin {
 
-    public static final long PERMANENT_BAN_TIME = ChronoUnit.YEARS.getDuration().toMillis();
-
     private HikariDataSource hikariDataSource;
     private Configuration config;
 

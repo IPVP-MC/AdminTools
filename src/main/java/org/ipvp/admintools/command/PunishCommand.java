@@ -51,7 +51,7 @@ public abstract class PunishCommand extends AdminToolsCommand {
                             sender.sendMessage(usage);
                             return;
                         }
-                        expiryDate = System.currentTimeMillis() + AdminTools.PERMANENT_BAN_TIME;
+                        expiryDate = -1;
                         reason = getReasonFromArgs(1, args);
                     } else if (args.length < 3) {
                         sender.sendMessage(usage);

@@ -85,7 +85,8 @@ CREATE TABLE IF NOT EXISTS player_punish_reverse (
 CREATE OR REPLACE VIEW player_active_punishment AS
   SELECT *
   FROM player_punish
-  WHERE expiry_date > CURRENT_TIMESTAMP
+  WHERE (expiry_date > CURRENT_TIMESTAMP
+         OR expiry_date IS NULL)
         AND id NOT IN (
     SELECT punish_id
     FROM player_punish_reverse

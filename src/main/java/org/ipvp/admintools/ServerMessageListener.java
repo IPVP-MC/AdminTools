@@ -50,8 +50,7 @@ public class ServerMessageListener implements Listener {
         String reason = input.readUTF();
 
         try (Connection connection = plugin.getDatabase().getConnection()) {
-            BanCommand.banPlayer(plugin, ProxyServer.getInstance().getConsole(), connection, name, uuid,
-                    System.currentTimeMillis() + AdminTools.PERMANENT_BAN_TIME, reason);
+            BanCommand.banPlayer(plugin, ProxyServer.getInstance().getConsole(), connection, name, uuid, -1, reason);
         } catch (SQLException e) {
             plugin.getLogger().log(Level.SEVERE, "Failed to issue ban", e);
         }

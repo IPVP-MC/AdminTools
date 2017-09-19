@@ -49,14 +49,14 @@ public class BanCommand extends PunishCommand {
             insertBan.setString(2, plugin.getUniqueIdSafe(sender));
             insertBan.setString(3, reason);
             insertBan.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
-            insertBan.setTimestamp(5, new Timestamp(expiry));
+            insertBan.setTimestamp(5, expiry == -1 ? null : new Timestamp(expiry));
             insertBan.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
         ProxiedPlayer target = plugin.getProxy().getPlayer(id);
-        String timeFormatted = TimeFormatUtil.toDetailedDate(expiry, true);
+        String timeFormatted = expiry == -1 ? "Permanent" : TimeFormatUtil.toDetailedDate(expiry, true);
         if (target != null) {
             target.disconnect(String.format("You were banned by %s for %s [%s]", sender.getName(), reason, timeFormatted));
         }
