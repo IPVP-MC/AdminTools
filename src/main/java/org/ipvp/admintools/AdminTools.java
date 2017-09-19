@@ -140,6 +140,11 @@ public class AdminTools extends Plugin {
         return sender instanceof ProxiedPlayer ? ((ProxiedPlayer) sender).getUniqueId() : null;
     }
 
+    public String getUniqueIdSafe(CommandSender sender) {
+        UUID uuid = getUniqueId(sender);
+        return uuid == null ? null : uuid.toString();
+    }
+
     public Ban getActiveBan(UUID banned) throws SQLException {
         try (Connection connection = hikariDataSource.getConnection()) {
             return getActiveBan(connection, banned);

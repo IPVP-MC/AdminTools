@@ -35,7 +35,7 @@ public class MuteCommand extends PunishCommand {
                      connection.prepareStatement("INSERT INTO player_punish(banned_id, sender_id, reason, creation_date, expiry_date, type) " +
                              "VALUES (?, ?, ?, ?, ?, 'mute')")) {
             insertBan.setString(1, id.toString());
-            insertBan.setString(2, getPlugin().getUniqueId(sender).toString());
+            insertBan.setString(2, getPlugin().getUniqueIdSafe(sender));
             insertBan.setString(3, reason);
             insertBan.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
             insertBan.setTimestamp(5, new Timestamp(expiry));

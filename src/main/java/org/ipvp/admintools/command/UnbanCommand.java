@@ -50,7 +50,7 @@ public class UnbanCommand extends AdminToolsCommand {
                             "VALUES (?, ?, ?, ?)")) {
                         insertUnban.setInt(1, ban.getId());
                         insertUnban.setString(2, ban.getPunished().toString());
-                        insertUnban.setString(3, getPlugin().getUniqueId(sender).toString());
+                        insertUnban.setString(3, getPlugin().getUniqueIdSafe(sender));
                         insertUnban.setString(4, reason);
                         insertUnban.executeUpdate();
                     }
