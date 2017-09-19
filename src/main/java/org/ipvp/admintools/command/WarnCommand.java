@@ -14,17 +14,17 @@ import java.sql.Timestamp;
 import java.util.UUID;
 import java.util.logging.Level;
 
-public abstract class WarnCommand extends AdminToolsCommand {
+public class WarnCommand extends AdminToolsCommand {
 
     public WarnCommand(AdminTools plugin) {
-        super(plugin, "note", "admintools.command.note");
+        super(plugin, "warn", "admintools.command.warn");
         // "/mute <player> <reason>"
     }
 
     @Override
     public void onCommand(CommandSender sender, String[] args) {
         if (args.length < 2) {
-            sender.sendMessage(ChatColor.RED + "/mute <player> <reason>");
+            sender.sendMessage(ChatColor.RED + "/warn <player> <reason>");
             return;
         }
 
@@ -38,16 +38,15 @@ public abstract class WarnCommand extends AdminToolsCommand {
             } else {
                 String reason = getReasonFromArgs(1, args);
 
-                try (PreparedStatement ps = connection.prepareStatement("INSERT INTO player_warning(target_id, sender_id, reason, creation_date) " +
-                        "VALUES (?, ?, ?, ?)")) {
+                try (PreparedStatement ps = connection.prepareStatement("INSERT INTO player_punish(banned_id, sender_id, reason, creation_date, expiry_date, type) " +
+                        "VALUES (?, ?, ?, ?, ?, 'warn')")) {
                     ps.setString(1, id.toString());
                     ps.setString(2, getPlugin().getUniqueIdSafe(sender));
                     ps.setString(3, reason);
                     ps.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+                    ps.setTimestamp(5, null);
                     ps.executeUpdate();
                 }
-
-
 
                 ProxiedPlayer target = getPlugin().getProxy().getPlayer(id);
                 if (target != null) {

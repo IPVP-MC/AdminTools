@@ -14,8 +14,11 @@ import org.ipvp.admintools.model.Mute;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
@@ -71,6 +74,39 @@ public class PlayerActivityListener implements Listener {
             insertLogin.executeUpdate();
         } catch (SQLException e) {
             plugin.getLogger().log(Level.SEVERE, "Failed to log player login", e);
+        } finally {
+            event.completeIntent(plugin);
+        }
+    }
+
+    @EventHandler
+    public void onLoginNotifyAlts(LoginEvent event) {
+        if (event.isCancelled()) {
+            return;
+        }
+
+        event.registerIntent(plugin);
+        try (Connection connection = plugin.getDatabase().getConnection();
+             PreparedStatement findBannedAlts = connection.prepareStatement("SELECT name2 " +
+                     "FROM player_related_ip_login " +
+                     "JOIN player_active_punishment ON id2 = banned_id " +
+                     "WHERE id1 = ?")) {
+            findBannedAlts.setString(1, event.getConnection().getUniqueId().toString());
+            try (ResultSet alts = findBannedAlts.executeQuery()) {
+                Set<String> bannedAlts = new TreeSet<>();
+                while (alts.next()) {
+                    bannedAlts.add(alts.getString("name2"));
+                }
+
+                if (bannedAlts.isEmpty()) {
+                    return;
+                }
+
+                plugin.broadcast(ChatColor.RED + String.format("%s might be an alternate account of the following banned players: %s",
+                        event.getConnection().getName(), bannedAlts.stream().collect(Collectors.joining(", "))), "admintools.notify.alts");
+            }
+        } catch (SQLException e) {
+            plugin.getLogger().log(Level.SEVERE, "Failed to notify player alt login", e);
         } finally {
             event.completeIntent(plugin);
         }

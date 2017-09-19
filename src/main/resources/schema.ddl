@@ -67,8 +67,8 @@ CREATE TABLE IF NOT EXISTS player_punish (
   sender_id     CHAR(36),
   reason        VARCHAR(100) NOT NULL,
   creation_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  expiry_date   TIMESTAMP,
-  type          ENUM ('ban', 'mute'),
+  expiry_date   TIMESTAMP    NULL,
+  type          ENUM ('ban', 'mute', 'warn'),
   PRIMARY KEY (id)
 );
 
@@ -91,12 +91,3 @@ CREATE OR REPLACE VIEW player_active_punishment AS
     FROM player_punish_reverse
     WHERE player_punish_reverse.punish_id = player_punish.id
   );
-
-CREATE TABLE IF NOT EXISTS player_warning (
-  id            INT                   AUTO_INCREMENT,
-  target_id     CHAR(36),
-  sender_id     CHAR(36),
-  reason        VARCHAR(100) NOT NULL,
-  creation_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id)
-);

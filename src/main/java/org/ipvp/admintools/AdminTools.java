@@ -62,6 +62,7 @@ public class AdminTools extends Plugin {
         getProxy().getPluginManager().registerCommand(this, new UnbanIpCommand(this));
         getProxy().getPluginManager().registerCommand(this, new UnblacklistCommand(this));
         getProxy().getPluginManager().registerCommand(this, new UnmuteCommand(this));
+        getProxy().getPluginManager().registerCommand(this, new WarnCommand(this));
 
         // Register listeners
         getProxy().getPluginManager().registerListener(this, new PlayerActivityListener(this));

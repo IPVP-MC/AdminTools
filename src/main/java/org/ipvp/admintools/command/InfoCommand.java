@@ -108,20 +108,22 @@ public class InfoCommand extends AdminToolsCommand {
 
                             builder.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverBuilder.create()));
 
-                            if (type.equalsIgnoreCase("mute")) {
-                                builder.append("[Mute]").color(ChatColor.GOLD).append(" ");
+                            if (type.equalsIgnoreCase("warn")) {
+                                builder.append("[Warn]").color(ChatColor.YELLOW).append(" ");
+                            } else if (type.equalsIgnoreCase("mute")) {
+                                builder.append("[Mute]").color(ChatColor.GOLD).append(" ").color(ChatColor.BOLD);
                             } else {
-                                builder.append("[Ban]").color(ChatColor.RED).append("  ");
+                                builder.append("[Ban]").color(ChatColor.RED).append(" ").append(" ").color(ChatColor.BOLD);
                             }
 
-                            long duration = expiry.getTime() - created.getTime();
+                            long duration = expiry == null ? -1 : expiry.getTime() - created.getTime();
                             builder.strikethrough(false).append(dateFormat.format(created)).color(ChatColor.GREEN)
                                     .append(" ").append(name).color(ChatColor.GRAY)
                                     .append(" (").color(ChatColor.RED)
-                                    .append(TimeFormatUtil.toDetailedDate(0, duration, true))
+                                    .append(duration == -1 ? "Permanent" : TimeFormatUtil.toDetailedDate(0, duration, true))
                                     .append(")");
 
-                            if (expiry.getTime() < System.currentTimeMillis()) {
+                            if (expiry != null && expiry.getTime() < System.currentTimeMillis()) {
                                 builder.append("(Expired)").color(ChatColor.RED);
                             }
 
