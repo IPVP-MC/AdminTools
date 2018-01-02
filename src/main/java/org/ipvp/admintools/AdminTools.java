@@ -50,6 +50,8 @@ public class AdminTools extends Plugin {
             return;
         }
 
+        getProxy().registerChannel("BanPlayer");
+
         // Register commands
         getProxy().getPluginManager().registerCommand(this, new AltsCommand(this));
         getProxy().getPluginManager().registerCommand(this, new BanCommand(this));
