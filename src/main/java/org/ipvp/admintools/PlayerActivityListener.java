@@ -134,9 +134,11 @@ public class PlayerActivityListener implements Listener {
         }
         // TODO: Better notification messages
 
-        if (event.isCommand() && isMutedCommand(event.getMessage())) {
-            event.setCancelled(true);
-            player.sendMessage(ChatColor.RED + "You cannot use this command while muted");
+        if (event.isCommand()) {
+            if (isMutedCommand(event.getMessage())) {
+                event.setCancelled(true);
+                player.sendMessage(ChatColor.RED + "You cannot use this command while muted");
+            }
             return;
         }
 
