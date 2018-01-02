@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS player_ip_ban (
   sender_id     CHAR(36),
   reason        VARCHAR(100) NOT NULL,
   creation_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  expiry_date   TIMESTAMP,
+  expiry_date   TIMESTAMP    NULL,
   PRIMARY KEY (id)
 );
 
