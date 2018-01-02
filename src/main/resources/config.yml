@@ -4,10 +4,10 @@ database:
   url: jdbc:mysql://127.0.0.1:3306/admintools
 
   # Database username
-  username: root
+  user: root
 
   # Database password
-  password:
+  pass:
 
   # Connections in the pool.
   threads: 1
