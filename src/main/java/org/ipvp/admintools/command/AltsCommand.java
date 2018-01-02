@@ -46,6 +46,11 @@ public class AltsCommand extends AdminToolsCommand {
             } else {
                 int maxPages = getMaxPages(connection, uuid);
 
+                if (maxPages == 0) {
+                    sender.sendMessage(ChatColor.RED + "Target player has no alternate accounts.");
+                    return;
+                }
+
                 if (page + 1 > maxPages || page < 0) {
                     sender.sendMessage(ChatColor.RED + "You must enter a page number between 1 and " + maxPages);
                     sender.sendMessage(ChatColor.RED + "Usage: /alts <player> [page]");
