@@ -48,7 +48,7 @@ public class InfoCommand extends AdminToolsCommand {
                 int maxPages = getMaxPages(connection, uuid);
 
                 if (maxPages == 0) {
-                    sender.sendMessage(ChatColor.RED + "Target player has no punishments on record.");
+                    sender.sendMessage(ChatColor.RED + "Target player has no punishments on record");
                     return;
                 }
 
