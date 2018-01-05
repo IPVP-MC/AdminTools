@@ -53,7 +53,7 @@ public class ServerMessageListener implements Listener {
             } catch (SQLException e) {
                 plugin.getLogger().log(Level.SEVERE, "Failed to issue ban", e);
             }
-        } else if (event.getTag().equals("BanUser")) {
+        } else if (event.getTag().equals("ConsoleBanUser")) {
             ByteArrayDataInput input = ByteStreams.newDataInput(event.getData());
             UUID user = UUID.fromString(input.readUTF());
             ProxiedPlayer player = plugin.getProxy().getPlayer(user);
