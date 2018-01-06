@@ -157,14 +157,17 @@ public class AdminTools extends Plugin {
                 "AND type = 'ban'")) {
             ps.setString(1, banned.toString());
             try (ResultSet rs = ps.executeQuery()) {
-                return rs.next() ?
-                        new Ban(rs.getInt("id"),
-                                UUID.fromString(rs.getString("sender_id")),
-                                banned,
-                                rs.getString("reason"),
-                                rs.getTimestamp("creation_date"),
-                                rs.getTimestamp("expiry_date"))
-                        : null;
+                if (rs.next()) {
+                    String sender = rs.getString("sender_id");
+                    return new Ban(rs.getInt("id"),
+                            sender != null ? UUID.fromString(rs.getString("sender_id")) : null,
+                            banned,
+                            rs.getString("reason"),
+                            rs.getTimestamp("creation_date"),
+                            rs.getTimestamp("expiry_date"));
+                } else {
+                    return null;
+                }
             }
         }
     }
