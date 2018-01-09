@@ -50,7 +50,7 @@ public class PlayerActivityListener implements Listener {
             }
         } catch (Exception e) {
             event.setCancelled(true);
-            event.setCancelReason("An error occurred when checking user ban information");
+            event.setCancelReason("An error occurred when checking your ban information");
             plugin.getLogger().log(Level.SEVERE, "Failed to check user ban inforamtion", e);
         } finally {
             event.completeIntent(plugin);
@@ -90,7 +90,7 @@ public class PlayerActivityListener implements Listener {
              PreparedStatement findBannedAlts = connection.prepareStatement("SELECT name2 " +
                      "FROM player_related_ip_login " +
                      "JOIN player_active_punishment ON id2 = banned_id " +
-                     "WHERE id1 = ?")) {
+                     "WHERE id1 = ? AND type = 'ban'")) {
             findBannedAlts.setString(1, event.getConnection().getUniqueId().toString());
             try (ResultSet alts = findBannedAlts.executeQuery()) {
                 Set<String> bannedAlts = new TreeSet<>();
