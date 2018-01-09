@@ -66,7 +66,7 @@ public class TimeFormatUtil {
         TimeUnit[] formattableUnit =
                 new TimeUnit[] { TimeUnit.DAYS, TimeUnit.HOURS, TimeUnit.MINUTES, TimeUnit.SECONDS };
         List<Object> tokens = Collections.list(new StringTokenizer(duration, suffixes, true));
-        int time = 0;
+        long time = 0;
 
         if (tokens.size() <= 1) {
             return -1L;
@@ -77,7 +77,7 @@ public class TimeFormatUtil {
             int suffixIndex = suffixes.indexOf(token.charAt(0));
 
             try {
-                int value = Integer.parseInt((String) tokens.get(i - 1));
+                long value = Long.parseLong((String) tokens.get(i - 1));
                 time += MILLISECONDS.convert(value, formattableUnit[suffixIndex]);
             } catch (NumberFormatException e) {
                 return -1L;
