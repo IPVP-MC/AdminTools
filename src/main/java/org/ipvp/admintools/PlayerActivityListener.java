@@ -11,6 +11,7 @@ import net.md_5.bungee.event.EventPriority;
 import org.ipvp.admintools.model.Ban;
 import org.ipvp.admintools.model.IpBan;
 import org.ipvp.admintools.model.Mute;
+import org.ipvp.admintools.util.TimeFormatUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,7 +40,12 @@ public class PlayerActivityListener implements Listener {
             Ban ban = plugin.getActiveBan(connection, who);
             if (ban != null) {
                 event.setCancelled(true);
-                event.setCancelReason("You are currently banned from the network!"); // TODO: Ban information
+                String expiry = ban.getExpiry() == null ? "Permanent" : TimeFormatUtil.toDetailedDate(ban.getExpiry().getTime());
+                event.setCancelReason(ChatColor.translateAlternateColorCodes('&',
+                        String.format("&cYou are banned from &lIPVP" +
+                                "\n\n&eReason: &f%s" +
+                                "\nExpires: &f%s" +
+                                "\n\n&eAppeal at http://ipvp.org/forum", ban.getReason(), expiry)));
             } else {
                 String ip = event.getConnection().getAddress().getAddress().getHostAddress();
                 IpBan ipBan = plugin.getActiveIpBan(connection, ip);
