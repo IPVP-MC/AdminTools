@@ -59,7 +59,8 @@ public class InfoCommand extends AdminToolsCommand {
                 }
 
                 sender.sendMessage(ChatColor.GRAY + "Fetching punishment information...");
-                try (PreparedStatement pageEntries = connection.prepareStatement("SELECT name, " +
+                try (PreparedStatement pageEntries = connection.prepareStatement("SELECT " +
+                        "(SELECT name FROM player_login pl WHERE pl.id = p.sender_id ORDER BY time DESC LIMIT 1) name, " +
                         "pr.sender_id reverse_sender_id, " +
                         "pr.reason reverse_reason, " +
                         "pr.creation_date reverse_date, " +
@@ -70,8 +71,6 @@ public class InfoCommand extends AdminToolsCommand {
                         "FROM player_punish p " +
                         "LEFT JOIN player_punish_reverse pr " +
                         "ON pr.punish_id = p.id " +
-                        "LEFT JOIN player_latest_login l " +
-                        "ON l.id = p.sender_id " +
                         "WHERE p.banned_id = ? " +
                         "ORDER BY creation_date DESC " +
                         "LIMIT ?, ?")) {
