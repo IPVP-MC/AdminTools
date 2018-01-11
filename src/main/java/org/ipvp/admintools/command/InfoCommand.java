@@ -106,7 +106,7 @@ public class InfoCommand extends AdminToolsCommand {
 
                                 String reverseReason = rs.getString("reverse_reason");
                                 if (reverseReason != null) {
-                                    builder.append("\n").append("Reverse Reason: ").color(ChatColor.GRAY)
+                                    hoverBuilder.append("\n").append("Reverse Reason: ").color(ChatColor.GRAY)
                                             .append(reverseReason).color(ChatColor.WHITE);
                                 }
                             }
