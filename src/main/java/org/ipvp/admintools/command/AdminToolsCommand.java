@@ -1,8 +1,11 @@
 package org.ipvp.admintools.command;
 
+import com.google.common.collect.Iterables;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
 import org.ipvp.admintools.AdminTools;
 
 import java.sql.Connection;
@@ -10,10 +13,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public abstract class AdminToolsCommand extends Command {
+public abstract class AdminToolsCommand extends Command implements TabExecutor {
 
     private AdminTools plugin;
 
@@ -78,5 +84,18 @@ public abstract class AdminToolsCommand extends Command {
                 return rs.next() ? rs.getString("name") : null;
             }
         }
+    }
+
+
+    @Override
+    public Iterable<String> onTabComplete(final CommandSender sender, final String[] args) {
+        if (args.length > 1) {
+            return Collections.emptyList();
+        }
+
+        return ProxyServer.getInstance().getPlayers().stream().filter(p -> {
+            String lower = (args.length == 0) ? "" : args[0].toLowerCase();
+            return p.getName().toLowerCase().startsWith(lower);
+        }).map(CommandSender::getName).collect(Collectors.toList());
     }
 }
