@@ -58,6 +58,9 @@ public class UnmuteCommand extends AdminToolsCommand {
                     }
 
                     ProxiedPlayer target = getPlugin().getProxy().getPlayer(id);
+                    if (target != null) {
+                        target.sendMessage(ChatColor.GREEN + "You were unmuted by " + sender.getName());
+                    }
                     String name = target == null ? args[0] : target.getName();
                     getPlugin().broadcast(ChatColor.RED + String.format("%s was unmuted by %s", name, sender.getName()), "admintools.notify.unmute");
                 }
