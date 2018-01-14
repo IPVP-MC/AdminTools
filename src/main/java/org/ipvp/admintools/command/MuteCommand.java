@@ -60,7 +60,7 @@ public class MuteCommand extends PunishCommand {
         String timeFormatted = expiry == -1 ? "Permanent" : TimeFormatUtil.toDetailedDate(expiry, true);
         if (target != null) {
             getPlugin().registerMute(id, mute);
-            target.disconnect(String.format("You were muted by %s for %s [%s]", sender.getName(), reason, timeFormatted));
+            target.sendMessage(String.format(ChatColor.RED + "You were muted by %s for %s [%s]", sender.getName(), reason, timeFormatted));
         }
         String name = target == null ? targetName : target.getName();
         // Broadcast minimal for all players
