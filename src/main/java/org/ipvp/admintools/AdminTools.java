@@ -25,13 +25,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 public class AdminTools extends Plugin {
 
     private HikariDataSource hikariDataSource;
     private Configuration config;
+    private Map<UUID, Mute> activeMute = new ConcurrentHashMap<>();
 
     @Override
     public void onEnable() {
@@ -170,6 +173,27 @@ public class AdminTools extends Plugin {
                 }
             }
         }
+    }
+
+    public void registerMute(UUID player, Mute mute) {
+        activeMute.put(player, mute);
+    }
+
+    public void unregisterMute(ProxiedPlayer player) {
+        activeMute.remove(player.getUniqueId());
+    }
+
+    public Mute getActiveMute(ProxiedPlayer player) {
+        Mute mute = activeMute.get(player.getUniqueId());
+        if (mute != null) {
+            // Check if the mute is expired
+            if (mute.getExpiry() != null && mute.getExpiry().getTime() < System.currentTimeMillis()) {
+                activeMute.remove(player.getUniqueId());
+                return null;
+            }
+            return mute;
+        }
+        return null;
     }
 
     public Mute getActiveMute(UUID banned) throws SQLException {

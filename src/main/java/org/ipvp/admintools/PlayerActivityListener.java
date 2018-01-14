@@ -5,6 +5,7 @@ import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.LoginEvent;
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
@@ -73,6 +74,11 @@ public class PlayerActivityListener implements Listener {
         try (Connection connection = plugin.getDatabase().getConnection();
              PreparedStatement insertLogin = connection.prepareStatement("INSERT INTO player_login(id, name, ip_address) " +
                      "VALUES (?, ?, INET_ATON(?))")) {
+            Mute mute = plugin.getActiveMute(connection, event.getConnection().getUniqueId());
+            if (mute != null) {
+                plugin.registerMute(mute.getPunished(), mute);
+            }
+
             PendingConnection pendingConnection = event.getConnection();
             insertLogin.setString(1, pendingConnection.getUniqueId().toString());
             insertLogin.setString(2, pendingConnection.getName());
@@ -125,14 +131,7 @@ public class PlayerActivityListener implements Listener {
         }
 
         ProxiedPlayer player = (ProxiedPlayer) event.getSender();
-        Mute mute;
-        try {
-            // TODO: Can't run blocking code
-            mute = plugin.getActiveMute(player.getUniqueId());
-        } catch (SQLException e) {
-            plugin.getLogger().log(Level.SEVERE, "Failed to check mute information of " + player.getName(), e);
-            return;
-        }
+        Mute mute = plugin.getActiveMute(player);
 
         // Check if the player is muted
         if (mute == null) {
@@ -149,7 +148,12 @@ public class PlayerActivityListener implements Listener {
         }
 
         event.setCancelled(true);
-        player.sendMessage(ChatColor.RED + "You are currently muted");
+        long expiry = mute.getExpiry() == null ? -1 : mute.getExpiry().getTime();
+        if (expiry == -1) {
+            player.sendMessage(ChatColor.RED + "You are permanently muted");
+        } else {
+            player.sendMessage(ChatColor.RED + "Your mute expires in " + TimeFormatUtil.toDetailedDate(expiry));
+        }
     }
 
     private boolean isMutedCommand(String fullCommand) {
@@ -161,5 +165,10 @@ public class PlayerActivityListener implements Listener {
             }
         }
         return false;
+    }
+
+    @EventHandler
+    public void onDisconnect(PlayerDisconnectEvent event) {
+        plugin.unregisterMute(event.getPlayer());
     }
 }
