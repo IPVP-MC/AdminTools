@@ -110,11 +110,23 @@ public class PlayerActivityListener implements Listener {
                     bannedAlts.add(alts.getString("name2"));
                 }
 
+
                 if (bannedAlts.isEmpty()) {
                     return;
                 }
 
-                plugin.broadcast(ChatColor.RED + String.format("%s might be an alternate account of the following banned players: %s",
+                String formatted = bannedAlts.stream().collect(Collectors.joining(", "));
+
+                if (bannedAlts.size() > 5) {
+                    event.setCancelled(true);
+                    event.setCancelReason(ChatColor.translateAlternateColorCodes('&',
+                            String.format("&cYou are banned on too many accounts!" +
+                                    "\n&c%s" +
+                                    "\n\n&eAppeal at http://ipvp.org/forum", formatted)));
+                    return;
+                }
+
+                plugin.broadcast(ChatColor.RED + String.format("%s is an alternate account of the following banned players: %s",
                         event.getConnection().getName(), bannedAlts.stream().collect(Collectors.joining(", "))), "admintools.notify.alts");
             }
         } catch (SQLException e) {
