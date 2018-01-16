@@ -99,30 +99,36 @@ public class PlayerActivityListener implements Listener {
 
         event.registerIntent(plugin);
         try (Connection connection = plugin.getDatabase().getConnection();
-             PreparedStatement findBannedAlts = connection.prepareStatement("SELECT name2 " +
-                     "FROM player_related_ip_login " +
-                     "JOIN player_active_punishment ON id2 = banned_id " +
-                     "WHERE id1 = ? AND type = 'ban'")) {
+             PreparedStatement findBannedAlts = connection.prepareStatement("SELECT DISTINCT name " +
+                             "FROM player_login " +
+                             "INNER JOIN (SELECT DISTINCT banned_id " +
+                                "FROM player_active_punishment " +
+                                "WHERE type = 'ban') AS b " +
+                             "WHERE player_login.id = b.banned_id " +
+                             "AND ip_address " +
+                             "IN (SELECT DISTINCT ip_address " +
+                                "FROM player_login " +
+                                "WHERE id = ?)")) {
             findBannedAlts.setString(1, event.getConnection().getUniqueId().toString());
             try (ResultSet alts = findBannedAlts.executeQuery()) {
                 Set<String> bannedAlts = new TreeSet<>();
                 while (alts.next()) {
-                    bannedAlts.add(alts.getString("name2"));
+                    bannedAlts.add(alts.getString("name"));
                 }
-
 
                 if (bannedAlts.isEmpty()) {
                     return;
                 }
 
-                String formatted = bannedAlts.stream().collect(Collectors.joining(", "));
+                String formatted = bannedAlts.stream().limit(5).collect(Collectors.joining("\n&c"));
 
                 if (bannedAlts.size() > 5) {
                     event.setCancelled(true);
                     event.setCancelReason(ChatColor.translateAlternateColorCodes('&',
                             String.format("&cYou are banned on too many accounts!" +
                                     "\n&c%s" +
-                                    "\n\n&eAppeal at http://ipvp.org/forum", formatted)));
+                                    "\n&c..." +
+                                    "\n&eAppeal at http://ipvp.org/forum", formatted)));
                     return;
                 }
 

@@ -16,8 +16,6 @@ import java.util.stream.Collectors;
 
 public class AltsCommand extends AdminToolsCommand {
 
-    private static final int ENTRIES_PER_PAGE = 25;
-
     public AltsCommand(AdminTools plugin) {
         super(plugin, "alts", "admintools.command.alts");
     }
@@ -25,16 +23,7 @@ public class AltsCommand extends AdminToolsCommand {
     @Override
     public void onCommand(CommandSender sender, String[] args) {
         if (args.length < 1) {
-            sender.sendMessage(ChatColor.RED + "Usage: /alts <player> [page]");
-            return;
-        }
-
-        int page;
-        try {
-            page = args.length == 1 ? 0 : Integer.parseInt(args[1]) - 1;
-        } catch (NumberFormatException e) {
-            sender.sendMessage(ChatColor.RED + "Please enter a valid page number");
-            sender.sendMessage(ChatColor.RED + "Usage: /alts <player> [page]");
+            sender.sendMessage(ChatColor.RED + "Usage: /alts <player>");
             return;
         }
 
@@ -44,36 +33,30 @@ public class AltsCommand extends AdminToolsCommand {
             if (uuid == null) {
                 sender.sendMessage(ChatColor.RED + "That player has never joined the server");
             } else {
-                int maxPages = getMaxPages(connection, uuid);
-
-                if (maxPages == 0) {
-                    sender.sendMessage(ChatColor.RED + "Target player has no alternate accounts");
-                    return;
-                }
-
-                if (page + 1 > maxPages || page < 0) {
-                    sender.sendMessage(ChatColor.RED + "You must enter a page number between 1 and " + maxPages);
-                    sender.sendMessage(ChatColor.RED + "Usage: /alts <player> [page]");
-                    return;
-                }
-
-                try (PreparedStatement pageEntries = connection.prepareStatement("SELECT * FROM (" +
-                        "SELECT * FROM player_related_ip_login ORDER BY time1" +
-                        ") ordered " +
-                        "WHERE id1 = ? " +
-                        "GROUP BY id1, id2 " +
-                        "LIMIT ?,?")) {
+                try (PreparedStatement pageEntries = connection.prepareStatement("SELECT DISTINCT name " +
+                                "FROM player_login " +
+                                "WHERE ip_address " +
+                                "IN (SELECT DISTINCT ip_address " +
+                                        "FROM player_login " +
+                                        "WHERE id = ?)")) {
 
                     pageEntries.setString(1, uuid.toString());
-                    pageEntries.setInt(2, page * ENTRIES_PER_PAGE);
-                    pageEntries.setInt(3, (page * ENTRIES_PER_PAGE) + ENTRIES_PER_PAGE);
 
                     try (ResultSet rs = pageEntries.executeQuery()) {
-                        sender.sendMessage(ChatColor.YELLOW + args[0] + " has shared an IP address with the following users:");
                         List<String> names = new ArrayList<>();
                         while (rs.next()) {
-                            names.add(rs.getString("name2"));
+                            String name = rs.getString("name");
+                            if (!name.equalsIgnoreCase(args[0])) {
+                                names.add(rs.getString("name"));
+                            }
                         }
+
+                        if (names.isEmpty()) {
+                            sender.sendMessage(ChatColor.RED + "Target player has no alternate accounts");
+                            return;
+                        }
+
+                        sender.sendMessage(ChatColor.YELLOW + args[0] + " has shared an IP address with the following users:");
                         sender.sendMessage(names.stream().collect(Collectors.joining(", ")));
                     }
                 }
@@ -81,19 +64,6 @@ public class AltsCommand extends AdminToolsCommand {
         } catch (SQLException e) {
             sender.sendMessage(ChatColor.RED + "An error occurred when checking alts of " + args[0]);
             getPlugin().getLogger().log(Level.SEVERE, "Failed to check alts", e);
-        }
-    }
-
-    private int getMaxPages(Connection connection, UUID id) throws SQLException {
-        try (PreparedStatement maxPages = connection.prepareStatement("SELECT count(*) / ? max_pages " +
-                "FROM (SELECT * FROM player_related_ip_login " +
-                "WHERE id1 = ? " +
-                "GROUP BY id1, id2) subquery")) {
-            maxPages.setInt(1, ENTRIES_PER_PAGE);
-            maxPages.setString(2, id.toString());
-            try (ResultSet rs = maxPages.executeQuery()) {
-                return rs.next() ? (int) Math.ceil(rs.getDouble("max_pages")) : -1;
-            }
         }
     }
 }
